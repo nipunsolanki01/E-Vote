@@ -1,0 +1,95 @@
+<% include adminheader.ejs %>
+
+<script>
+    function check(){
+        if(document.forms["addelec"]["elec_code"].value==''|| document.forms["addelec"]["elec_name"].value == ''){
+            window.alert("Please fill the empty fields!");
+        }
+        else{
+            sub();
+        }
+    }
+
+    function sub(){
+        $.ajax({
+        url: '/admin/addelection',
+        dataType: "json",
+        data: {"elec_code": document.getElementById('elec_code').value, "elec_name": document.getElementById('elec_name').value},
+        type: 'POST',
+        jsonpCallback: 'callback', // this is not relevant to the POST anymore
+        success: function (data) {
+            // console.log(data['message']);
+            var resp = data['message'];
+            if(resp == "Success"){
+                window.alert("Election Added Successfully!");
+                window.location='/admin/addelection';
+            }
+            else{
+                window.alert('The Given Election ID Already Exist!');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
+    });
+    }
+</script>
+                <div id="election_table">
+                    <div>
+                        <h3>Add Election</h3>
+                        <form method="post" id="addelec" action="/admin/addelection" class="form-inline">
+                            <div class="form-group">
+                                    <input type="text" class="form-control" id="elec_code" name="elec_code" placeholder="Enter Election Code" >
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="elec_name" name="elec_name" placeholder="Enter Election Name">
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary form-control" onclick="check();">Add Election</button>
+                                </div>
+                        </form>
+                    </div>
+                    <hr>
+                    <table class="table table-hover table-bordered table-striped">
+                        <h4>Elections</h4>
+                        
+                        <small>This is the list of the elections being held presently.</small><br>
+                        <small>Click on the row item to delete that election.</small>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Election Code</th>
+                                <th scope="col">Election Name</th>
+                                <th scope="col">Election Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i=0; i < electionList.length; i++){ %>
+                                <tr  onclick="if(confirm('Are you sure you want to delete this election?')){window.location='/admin/electiondelete/<%= electionList[i].electionId %>';}" style="cursor: pointer;">
+                                    <td>
+                                        <%= (i+1) %>
+                                    </td>
+                                    <td>
+                                        <%= electionList[i].electionId %>
+                                    </td>
+                                    <td>
+                                        <%= electionList[i].electionName %>
+                                    </td>
+                                    <td>
+                                        <%=(electionList[i].status ? "Completed" : "Running")   %>
+                                    </td>     
+                                </tr>
+                            <% } %>
+                        </tbody>
+                        
+                    </table>
+                    <hr>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+    </body>
+
+    </html>

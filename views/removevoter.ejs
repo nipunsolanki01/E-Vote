@@ -1,0 +1,40 @@
+<% include adminheader.ejs %>
+
+<div id="remove_voter_table">
+    <table class="table table-hover table-bordered table-striped">
+        <h4>Voters</h4>
+        <small>Click on the row item to remove the Voter.</small>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Aadhaar</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Verified?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0 ; i < voters.length; i++) { %>
+                <tr onclick="if(confirm('Are you sure you want to remove this voter?')){window.location='/admin/removevoter/<%= voters[i].aadhar %>';}" style="cursor: pointer;">
+
+                    <th scope="row">
+                        <%= i+1 %>
+                    </th>
+                    <td>
+                        <%= voters[i].name%>
+                    </td>
+                    <td>
+                        <%= voters[i].aadhar%>
+                    </td>
+                    <td>
+                        <%= voters[i].gender%>
+                    </td>
+                    <td>
+                        <%=(voters[i].isValid ? "TRUE" : "FALSE")   %>
+                    </td>
+                </tr>
+                <% }%>
+        </tbody>
+    </table>
+    <hr>
+</div>

@@ -1,0 +1,74 @@
+<% include header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <button type="button" class="btn btn-warning" id="pollAgent_statistics_view_btn"> Statistics</button>
+                <button type="button" class="btn btn-danger float-right" onclick="javascript:window.location = '/pollAgent/logout';"> Logout</button>
+
+                <hr>
+
+                <div id="pollAgent_stats" style="display:none;">
+                    <h4>Statistics</h4>
+                    <small>Various statistics for the election held are as follows : </small>
+                    <hr>
+                    <ul>
+                        <li><b>Number of Requests for Authorisation : </b> <%= voters.length %></li>
+                        <li><b>Number of Authorised Requests : </b> <%= alwvoters.length %></li>
+                      </ul>
+                      <hr>
+                </div>
+
+                <div id="voter_table">
+                    <table class="table table-hover table-bordered table-striped">
+                        <h4>Voters</h4>
+                        <small>Click on the row item to verify the identity of Voter.</small>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Aadhaar</th>
+                                <!-- <th scope="col">Election Name</th> -->
+                                <th scope="col">Election Id</th>
+                                <th scope="col">Voted?</th>
+                                <th scope="col">Verified?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i=0 ; i < voters.length; i++) { %>
+                                <% console.log(voters[i]); %>
+                                <% var msg= "Voter has already voted. Verification status can not be changed."; %>
+                                <% var f = voters[i].voteCount;%>
+                                <tr onclick="if( '<%- f %>' == 0 ){window.location='/pollAgent/verifyvoter/<%= voters[i].aadhar %>/<%= voters[i].electionId %>';}else{ window.alert( '<%- msg %>' );}" style="cursor: pointer;">
+                
+                                    <th scope="row">
+                                        <%= i+1 %>
+                                    </th>
+                                    <td>
+                                        <%= voters[i].name%>
+                                    </td>
+                                    <td>
+                                        <%= voters[i].aadhar%>
+                                    </td>
+                                    <td>
+                                        <%= voters[i].electionId%>
+                                    </td>
+                                    <td>
+                                    <%=(voters[i].voteCount ? "TRUE" : "FALSE")   %>
+                                    </td>
+                                    <td>
+                                        <%=(voters[i].verified ? "TRUE" : "FALSE")   %>
+                                    </td>
+                                </tr>
+                                <% }%>
+                        </tbody>
+                    </table>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    </body>
+
+    </html>

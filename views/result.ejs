@@ -1,0 +1,222 @@
+<style type="text/css">
+    #contact1 {
+      background: #f0fff0;
+      padding: 10px;
+      /*margin: 150px 0; */
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      position:absolute; 
+      left:20px; top:200px;
+    }
+    
+    #contact1 button[type="submit1"] {
+      font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif;
+    }
+    #contact1 button[type="submit1"] {
+      cursor: pointer;
+      width: 100%;
+      border: none;
+      background: #ffc107;
+      color: #000000	;
+      margin: 0 0 5px;
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    .row {
+  margin-left:-5px;
+  margin-right:-5px;
+}
+  
+.column {
+  float: left;
+  width: 50%;
+  
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+</style>
+
+
+<script>
+var election1_flag = false;
+$('#election1_btn').click(function(){
+		if(election1_flag == false){
+			// $('#e1_voter_table').show();
+			// $('#e1_nonvoter_table').show();
+			$('#e1').show();
+			election1_flag = true;
+		}else{
+			// $('#e1_voter_table').hide();
+			// $('#e1_nonvoter_table').hide();
+			$('#e1').hide();
+			election1_flag = false;
+		}
+});
+
+    function myFunction123(a, n) {
+        for(var i=0;i<n;i++){
+            var id = "#"+i;
+            var num = i+10000; 
+            var id1 = "#"+num;
+            console.log(id);
+            $(id).hide();
+            $(id1).hide();
+        }
+        id = "#"+a;
+        num=a+10000;
+        id1 = "#"+num;
+        $(id).show();
+        $(id1).show();
+        console.log(id);
+        console.log(id1);
+    }
+    function myFunction(n) {
+        for(var i=0;i<n;i++){
+            var id = "#"+i;
+            var num = i+10000; 
+            var id1 = "#"+num;
+            console.log(id);
+            $(id).hide();
+            $(id1).hide();
+        }
+    }
+    function chkcontrol(a,b,c,d) {
+	    var maxNumberofElectives = 2;
+	    var total=0;
+        var idd = (b+1)*100000;
+        idd = idd+c;
+        var iddd  = "ee" + idd;
+        var obj = document.getElementById(iddd);
+        console.log(obj);
+        if(a > 0){
+            alert("Voter has already voted \nCan't remove now!!"); 
+            // document.form1.ckb[j].checked = false ;
+            obj.checked = false;
+            return false;
+        }
+        var count=0;
+        for(var i=0;i<d;i++){
+            idd = (b+1)*100000;
+            idd = idd+i;
+            iddd  = "ee" + idd;
+            obj = document.getElementById(iddd);
+            if(obj.checked===true)
+                count++;
+        }
+        console.log(count);
+        if(count>1){
+            alert("Can only debar one voter at a time\n");
+            idd = (b+1)*100000;
+            idd = idd+c;
+            iddd  = "ee" + idd;
+            obj = document.getElementById(iddd);
+            obj.checked = false;
+            return false;
+        }
+	}
+
+</script>
+
+    <div id="contact1" >
+        <center><h5><b>Elections</b></h5></center> 
+        <fieldset>
+        <% for(var i=0; i<electionList.length; i++) { %>    
+        <button name="submit1" type="submit1" class="btn btn-warning" value=<%= i %> onclick="myFunction123( <%= i %> , <%= electionList.length %>)"> <%=electionList[i].electionName %></button>
+        <br> 
+        <% } %>        
+        <!-- <button type="submit">Submit</button> -->
+        </fieldset>
+    </div>   
+<!-- <div style="display:none;position:absolute"> -->
+
+<% include adminheader.ejs %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+
+<div class="row" >
+
+ <%   for(var i=0;i < electionList.length ; i++){    %>
+    
+<div class="column"  >
+<center><div id= <%= i %> style="display:none;position:absolute;" >
+    <form id="changestatus" action="/admin/result" method = "post" name = <%= i %> >
+    <% if(electionList[i].status > 0){ %>
+        <% var status = "Completed"; %>
+    <% } %>
+    <% if(electionList[i].status == 0){ %>
+        <% var status = "Running"; %>
+    <% } %>
+    <h4>Election Name : <%= electionList[i].electionName %></h4>
+    <hr>
+    <h5>Election Status : <%= status %></h5>
+    <hr>
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Candidate Id</th>
+                <th scope="col">Vote Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var j=0 ; j <resultList[i].length; j++) { %>
+                    <th scope="row">
+                        <%= j+1 %>
+                    </th>
+                    <td>
+                        <%= resultList[i][j].firstname%> <%= resultList[i][j].lastname%>
+                    </td>
+                    <td>
+                        <%= resultList[i][j].candidateId%>
+                    </td>
+                    <td>  
+                        <%= resultList[i][j].voteCount %>
+                    </td>
+                </tr>
+            <% }%>
+        </tbody>
+    </table>
+    <hr>
+    <% if(electionList[i].status ==0 && resultList[i].length >0 && resultList[i][0].voteCount>0 ) { %>
+        <% if(resultList[i].length>1 && resultList[i][0].voteCount == resultList[i][1].voteCount ) { %>
+        <h4>Current Scenario : There is competition among the candidates. </h4>
+        <% }else{ %>
+        <h4>Current Scenario : <%= resultList[i][0].firstname %> <%= resultList[i][0].lastname %> is LEADING </h4>
+        <% } %>
+    <% }else if(resultList[i].length > 0 && resultList[i][0].voteCount>0){ %>
+        <% if(resultList[i].length>1 && resultList[i][0].voteCount == resultList[i][1].voteCount ) { %>
+            <h4>Current Scenario : Tie. </h4>
+        <% }else{ %>
+            <h4> WINNER : <%= resultList[i][0].firstname %> <%= resultList[i][0].lastname %>  </h4>
+        <% } %>
+    <% }else if(resultList[i].length > 0 ){ %>
+            <h4> No vote so far for this election </h4>    
+    <% } else { %>
+        <h4> Please add candidates to this election  </h4>
+    <% } %>   
+    <hr>
+    <% if(electionList[i].status != 1 ) {%>
+    <small>Click here to finish voting for this election</small><br>
+    <button type="submit" name="submit" class="btn btn-primary form-control" value=<%=i%> onclick="if(confirm('Are you sure you want to change the status of election?')){document.getElementById('changestatus').submit();}"  >Finish Voting</button>
+    <% } %>
+    <% if(electionList[i].status == 1 ) {%>
+        <small>Click here to start voting for this election</small><br>
+        <button type="submit" name="submit" class="btn btn-primary form-control" value=<%=i%> onclick="if(confirm('Are you sure you want to change the status of election?')){document.getElementById('changestatus').submit();}"  >Start Voting</button>
+        <% } %>
+    </form> 
+     
+</div></center>
+</div>
+
+    </div>
+
+<% } %>
+</div>

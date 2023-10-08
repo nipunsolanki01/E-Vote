@@ -1,0 +1,67 @@
+<% include header.ejs %>
+
+<script>
+    function check(){
+        console.log("Data : ", document.forms["admlgn"]["login_id"].value);
+        if(document.forms["admlgn"]["login_id"].value==''|| document.forms["admlgn"]["password"].value == ''){
+            window.alert("Please enter your username or password");
+        }
+        else{
+            // document.getElementById('admlgn').submit();
+            sub();
+        }
+    }
+
+    function sub(){
+        $.ajax({
+        url: '/admin/login',
+        dataType: "json",
+        data: {"login_id": document.getElementById('login_id').value, "password": document.getElementById('password').value},
+        type: 'POST',
+        jsonpCallback: 'callback', // this is not relevant to the POST anymore
+        success: function (data) {
+            // console.log(data['message']);
+            var resp = data['message'];
+            if(resp == "Success"){
+                window.location='/admin';
+            }
+            else{
+                window.alert('Please enter correct username or password');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
+    });
+    }
+</script>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container" style="width: 40%;">
+                        <h1 class="display-4 text-center">Admin Login</h1>
+                        <p class="lead">
+                            <form id="admlgn" name="admlgn" method="post" action="/admin/login">
+                                <div class="form-group">
+                                  <label for="login_id">Login ID</label>
+                                    <input type="text" class="form-control" id="login_id" name="login_id">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password">
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <button type="button" id="login_btn" class="btn btn-success btn-lg btn-block" onclick="check();">Login</button>
+                                </div>
+                            </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+    </html>

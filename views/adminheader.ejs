@@ -1,0 +1,16 @@
+<% include header.ejs %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+                <!-- <button type="button" class="btn btn-warning" id="voter_table_view_btn"> Voters / Candidates</button> -->
+                <p><button type="button" class="btn btn-warning" id="statistics_view_btn" onclick="window.location='/admin';"> Statistics</button>&emsp;
+                <button type="button" class="btn btn-warning" id="election_table_view_btn" onclick="window.location='/admin/addelection';"> Election</button>&emsp;
+                <button type="button" class="btn btn-warning" id="election_table_view_btn" onclick="window.location='/admin/addcandidate';"> Candidate</button>&emsp;
+                <button type="button" class="btn btn-warning" id="candidate_table_view_btn" onclick="window.location='/admin/candidateelection';"> Elect Candidates</button>&emsp;
+                <button type="button" class="btn btn-warning" id="voter_table_view_btn" onclick="window.location='/admin/authvoter';"> Auth Voters</button>&emsp;
+                <button type="button" class="btn btn-warning" id="voter_table_view_btn" onclick="window.location='/admin/addvoters';"> Add Voters</button>&emsp;
+                <button type="button" class="btn btn-warning" id="voter_table_view_btn" onclick="window.location='/admin/removevoter';"> Remove Voters</button>&emsp;
+                <button type="button" class="btn btn-warning" id="voter_table_view_btn" onclick="window.location='/admin/result';"> Result</button>
+                <button type="button" class="btn btn-danger float-right" onclick="javascript:window.location = '/admin/logout';"> Logout</button></p>
+                <hr>

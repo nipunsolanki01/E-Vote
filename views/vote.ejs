@@ -1,0 +1,196 @@
+<% include header.ejs %>
+<style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic);
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    /* font-smoothing: antialiased; */
+    text-rendering: optimizeLegibility;
+  }
+  
+  body {
+    /* font-family: "Roboto", Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    font-size: 12px;
+    line-height: 30px;
+    color: #777; */
+    background: honeydew;
+  }
+  
+  .container {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background : #e9ecef;
+    padding : 64px;
+  }
+  
+  #contact input[type="text"],
+  #contact input[type="email"],
+  #contact input[type="tel"],
+  #contact input[type="url"],
+  #contact textarea,
+  #contact button[type="submit"] {
+    font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif;
+  }
+  
+  #contact {
+    background: #e9ecef;
+    padding: 25px;
+    /* margin: 150px 0; */
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  }
+  
+  #contact h3 {
+    display: block;
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+  
+  #contact h4 {
+    margin: 5px 0 15px;
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+  }
+  
+  fieldset {
+    border: medium none !important;
+    margin: 0 0 10px;
+    min-width: 100%;
+    padding: 0;
+    width: 100%;
+  }
+  
+  #contact button[type="submit"] {
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    background: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+    color: #FFF;
+    margin: 0 0 5px;
+    padding: 10px;
+    font-size: 15px;
+  }
+  
+  #contact button[type="submit"]:hover {
+    background: #43A047;
+    -webkit-transition: background 0.3s ease-in-out;
+    -moz-transition: background 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  #contact button[type="submit"]:active {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  
+</style>
+
+<script>
+
+var _validFileExtensions = [".png"];    
+function ValidateSingleInput(oInput) {
+    if (oInput.type == "file") {
+        var sFileName = oInput.value;
+         if (sFileName.length > 0) {
+            var blnValid = false;
+            for (var j = 0; j < _validFileExtensions.length; j++) {
+                var sCurExtension = _validFileExtensions[j];
+                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                    blnValid = true;
+                    break;
+                }
+            }
+             
+            if (!blnValid) {
+                alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                oInput.value = "";
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+    function check(){
+        // console.log("Data : ", document.forms["vtlgn"]["password"].value);
+        if(document.forms["vtlgn"]["password"].value==''){
+            window.alert("Please enter your password");
+        }
+        else{
+            document.getElementById('voting').submit();
+        }
+    }
+
+  function submitqr(x){
+      $('#spinnerlds').hide();
+      $('#uploading').hide();
+			$('#submit_qr').show();
+			$('#qrcode').show();
+      $('#password').show();
+      $('#submittext').show();
+      
+			console.log("Pic : ", x.target.result);
+      document.getElementById('qrcode').src = x.target.result;
+  }
+
+  function uploadqr(){
+      var reader = new FileReader();
+	    reader.onload = function (e) {
+      $('#uploadtext').hide();
+			$('#upload_qr').hide();
+			$('#myFile').hide();
+      $('#uploading').show();
+      $('#spinnerlds').show();
+      setTimeout(submitqr,1000,e); 
+      }
+      reader.readAsDataURL(document.getElementById('myFile').files[0]);
+	}
+</script>
+
+<div class="container">
+<div class="lds-css ng-scope">
+  
+
+<form id = "voting" name="vtlgn" action="/verifyvoterqr" method="post" enctype="multipart/form-data">
+  <center><h1 class="display-4 text-center" id ="uploadtext" >Upload QR Code</h1></center>
+  <center><h1 class="display-4 text-center" id ="uploading" style="display:none;" >Uploading...</h1></center>
+  <div class="lds-spinner" id="spinnerlds" style="width: 100%;height:100%; margin: 0 auto; display:none;">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+  <center><h1 class="display-4 text-center" id="submittext" style="display:none;">Submit QR Code</h1></center>
+  <br>
+  <fieldset>
+    <input type="file" id="myFile" onchange="ValidateSingleInput(this);" name="avatar">
+    <center><img id ="qrcode" src ="qrcode" style="display:none;" width="150" height="150"/></center><br>
+    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" style="display: none;">
+
+    <div type="button" class="file btn btn-success btn-lg btn-block" id="upload_qr" style="position: relative;
+                        overflow: hidden;" onclick="if(document.getElementById('myFile').value!= ''){uploadqr();} else{window.alert('Please Upload A QR Code');}">Upload QR Code</div>
+    <div type="button" class="file btn btn-success btn-lg btn-block" id="submit_qr" style="position: relative;
+    overflow: hidden; display:none;" onclick = "check();">Submit QR Code</div>
+    
+  </fieldset>
+</form>
+</div>
+</div>
+

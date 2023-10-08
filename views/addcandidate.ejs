@@ -1,0 +1,114 @@
+<% include adminheader.ejs %>
+
+<script>
+
+    function check(){
+        if(document.forms["addcand"]["firstname"].value==''|| document.forms["addcand"]["lastname"].value == ''|| document.forms["addcand"]["candidateId"].value == ''|| document.forms["addcand"]["contact"].value == '' || document.forms["addcand"]["gender"].value == 'Others'){
+            window.alert("Please fill the empty fields!");
+        }
+        else{
+            // document.getElementById('admlgn').submit();
+            sub();
+        }
+    }
+
+    function sub(){
+        $.ajax({
+        url: '/admin/addcandidate',
+        dataType: "json",
+        data: {"firstname": document.getElementById('firstname').value, "lastname": document.getElementById('lastname').value, "candidateId": document.getElementById('candidateId').value, "contact":document.getElementById('contact').value, "gender":document.getElementById('gender').value},
+        type: 'POST',
+        jsonpCallback: 'callback', // this is not relevant to the POST anymore
+        success: function (data) {
+            // console.log(data['message']);
+            var resp = data['message'];
+            if(resp == "Success"){
+                window.alert("Candidate Added Successfully!");
+                window.location='/admin/addcandidate';
+            }
+            else{
+                window.alert('The Given Candidate ID Already Exist!');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+        },
+    });
+    }
+</script>
+
+                <div id="candidate_table">
+                    <div>
+                        <h3>Add Candidate</h3>
+                        <form method="post" name="addcand" id="addcand" action="/admin/addcandidate" class="form-inline">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="firstname" name="firstname" required placeholder="Enter First Name">
+                                <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter Last Name">
+                                <input type="text" class="form-control" id="candidateId" name="candidateId"  required  placeholder="Enter Candidate Id">
+                                <input type="number" class="form-control" id="contact" name="contact"  required placeholder="Enter Contact Number">
+                            </div>
+                            <div class="form-group">
+                                <select class="custom-select form-control" id="gender" name="gender" required>
+                                    <option value="Others" selected hidden disabled>
+                                        Gender
+                                    </option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary form-control" onclick="check();" >Add Candidate</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <hr>
+                <table class="table table-hover table-bordered table-striped">
+                    <h4>Candidates</h4>
+                    <small>Click on the row item to remove that candidate.</small>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Candidate Id</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(var i=0 ; i < candidateList.length; i++) { %>
+                            <tr onclick="if(confirm('Are you sure you want to remove this Candidate?')){window.location='/admin/removecandidate/<%= candidateList[i].candidateId %>';}" style="cursor: pointer;">
+                                <td scope="row">
+                                    <%= i+1 %>
+                                </td>
+                                <td>
+                                    <%= candidateList[i].firstname %> <%= candidateList[i].lastname %> 
+                                </td>
+                                <td>
+                                    <%= candidateList[i].candidateId%> 
+                                </td>
+                                <td>
+                                    <%= candidateList[i].gender%> 
+                                </td>
+                                <td>
+                                    <%= candidateList[i].contact%> 
+                                </td>
+                            </tr>
+                        <% }%>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+
+                
+
+                
+
+            </div>
+        </div>
+    </div>
+    </body>
+
+    </html>

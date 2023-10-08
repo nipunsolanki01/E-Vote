@@ -1,0 +1,115 @@
+<% include header.ejs %>
+<script>
+    function pageRedirect() {
+		alert("You have successfully registered!");
+         window.location.replace("/register");
+    }      
+
+    function regi()
+    {
+        $('#cam_col, #reg_col').hide();
+		$('#final').show();
+    }
+
+    function buttonclick(){
+        if(document.forms["regform"]["name"].value==''|| document.forms["regform"]["aadhaar"].value == '' || document.forms["regform"]["password"].value == '' || document.forms["regform"]["gender"].value == 'Others'){
+            window.alert("Please fill all fields.");
+        }
+        else{
+            regi();
+            document.getElementById('regform').submit();
+            setTimeout("pageRedirect()", 1000);
+        }
+		
+    }
+</script>
+
+     <div class="container">
+        <div class="row" id="register_row">
+            <!-- <div class="col-md-6" id="cam_col">
+                <video autoplay id="camera"></video>
+                <button id="take_snapshots" class="btn btn-secondary btn-lg btn-block">Capture</button>
+                <canvas id='snapshots'></canvas> -->
+            <!-- </div> -->
+
+            <div id="final" class="col-md-12" style="display:none;">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <h1 class="display-4 text-center">Registration Completed</h1>
+                        <p class="lead text-center">
+                        Please Wait...
+                        Downloading your QR Code...
+                        <div>
+                            <div class="lds-css ng-scope"><div style="width:100%;height:100%" class="lds-ellipsis"><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
+                            </div>
+                        </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6" id="reg_col">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        
+                        <center><h1 class="display-4">Register</h1></center>
+                        <p><i><%=(typeof alertMsg!='undefined')? alertMsg:''%></i></p>
+                        <% if(alertMsg != 'undefined') {   %>
+                        <%  console.log(alertMsg);    %>
+                        <%  }   %>
+                        <!-- <p class="lead"> -->
+                            <form id="regform" name="regform" method="post" action="/register">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <!-- <small class="form-text text-muted">Name as on your Aadhar Card</small> -->
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Name On Your Aadhar Card" required>
+                                    
+                                </div>
+                                <!-- <div class="form-group" hidden>
+                                    <input type="hidden" class="form-control" id="avatar" name="avatar" filename="name">
+                                </div> -->
+                                <div class="form-group">
+                                    <label for="aadhaar">Aadhaar No.</label>
+                                    <input type="number" class="form-control" id="aadhaar" name="aadhaar" placeholder="Enter Your Aadhaar Number" required />
+                                </div>
+                                <div class="form-group">
+                                    <!-- <br> -->
+                                    <label for="aadhaar">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required placeholder="Enter Password" required />
+                                </div>  <!-- <br> -->
+                                
+                                <div class="form-group">
+                                    <label for="aadhaar">Gender</label>
+                                    <select class="custom-select form-control" id="gender" name="gender" required>
+                                        <option value="Others" selected disabled hidden>
+                                            Select Your Gender
+                                        </option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="others">Others</option>
+                                    </select>
+                                </div>
+                                <!-- <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="constituency">Constituency</label>
+                                    </div> -->
+                                    <!-- <select class="custom-select" id="constituency" name="constituency">
+                                        <option selected>Choose...</option>
+                                        <option value="Jabalpur">Jabalpur</option>
+                                        <option value="Delhi">Delhi</option>
+                                    </select> -->
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" id="register_btn" class="btn btn-success btn-lg btn-block" onclick="buttonclick();">Submit</button>
+                                </div>
+                            </form>
+                        <!-- </p> -->
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    </body>
+
+    </html>

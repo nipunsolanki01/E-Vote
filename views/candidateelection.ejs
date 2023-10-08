@@ -1,0 +1,248 @@
+<style type="text/css">
+    #contact1 {
+      background: #f0fff0;
+      padding: 10px;
+      /*margin: 150px 0; */
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      position:absolute; 
+      left: 0px; top:200px;
+    }
+    
+    #contact1 button[type="submit1"] {
+      font: 400 12px/16px "Roboto", Helvetica, Arial, sans-serif;
+    }
+    #contact1 button[type="submit1"] {
+      cursor: pointer;
+      width: 100%;
+      border: none;
+      background: #ffc107;
+      color: #000000	;
+      margin: 0 0 5px;
+      padding: 10px;
+      font-size: 15px;
+    }
+
+    .row {
+  margin-left:-5px;
+  margin-right:-5px;
+}
+  
+.column {
+  float: left;
+  width: 50%;
+  
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+</style>
+
+
+<script>
+// var election1_flag = false;
+// $('#election1_btn').click(function(){
+// 		if(election1_flag == false){
+// 			// $('#e1_voter_table').show();
+// 			// $('#e1_nonvoter_table').show();
+// 			$('#e1').show();
+// 			election1_flag = true;
+// 		}else{
+// 			// $('#e1_voter_table').hide();
+// 			// $('#e1_nonvoter_table').hide();
+// 			$('#e1').hide();
+// 			election1_flag = false;
+// 		}
+// });
+
+    function myFunction123(a, n) {
+        for(var i=0;i<n;i++){
+            var id = "#"+i;
+            var num = i+10000; 
+            var id1 = "#"+num;
+            console.log(id);
+            $(id).hide();
+            $(id1).hide();
+        }
+        id = "#"+a;
+        num=a+10000;
+        id1 = "#"+num;
+        $(id).show();
+        $(id1).show();
+        console.log(id);
+        console.log(id1);
+    }
+    function myFunction(n) {
+        for(var i=0;i<n;i++){
+            var id = "#"+i;
+            var num = i+10000; 
+            var id1 = "#"+num;
+            console.log(id);
+            $(id).hide();
+            $(id1).hide();
+        }
+    }
+    function chkcontrol(a,b,c,d) {
+	    var maxNumberofElectives = 2;
+	    var total=0;
+        var idd = (b+1)*100000;
+        idd = idd+c;
+        var iddd  = "ee" + idd;
+        var obj = document.getElementById(iddd);
+        console.log(obj);
+        console.log("Value of a"+ a);
+        console.log("Value of b"+ b);
+        console.log("Value of c"+ c);
+        console.log("Value of d"+ d);
+        if(a > 0){
+            alert("Voter has already voted \nCan't remove now!!"); 
+            // document.form1.ckb[j].checked = false ;
+            obj.checked = false;
+            return false;
+        }
+        var count=0;
+        for(var i=0;i<d;i++){
+            idd = (b+1)*100000;
+            idd = idd+i;
+            iddd  = "ee" + idd;
+            console.log("Value of iddd" + iddd);
+            obj = document.getElementById(iddd);
+            if(obj.checked===true)
+                count++;
+        }
+        console.log("Value of count"+count);
+        if(count>1){
+            alert("Can only debar one candidate at a time\n");
+            idd = (b+1)*100000;
+            idd = idd+c;
+            iddd  = "ee" + idd;
+            obj = document.getElementById(iddd);
+            obj.checked = false;
+            return false;
+        }
+	}
+
+</script>
+
+    <div id="contact1" >
+        <center><h5><b>Elections</b></h5></center> 
+        <fieldset>
+        <% for(var i=0; i<electionList.length; i++) { %>    
+        <button name="submit1" type="submit1" class="btn btn-warning" value=<%= i %> onclick="myFunction123( <%= i %> , <%= electionList.length %>)"> <%=electionList[i].electionName %></button>
+        <br> 
+        <% } %>        
+        <!-- <button type="submit">Submit</button> -->
+        </fieldset>
+    </div>   
+<!-- <div style="display:none;position:absolute"> -->
+
+<% include adminheader.ejs %>
+
+<div class="row">
+
+ <%   for(var i=0;i < electionList.length ; i++){    %>
+    
+<div class="column">
+<div id= <%= i %> style="position:absolute; display:none;" name = <%= idd2 %> >
+    <form action="/admin/debarcandidate" method = "post" name = <%= i %> >
+    <table class="table table-hover table-bordered table-striped">
+        <h4>Previously Selected Candidates</h4>
+        <small>Select a candidate to remove it from this election.</small>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Candidate ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Select</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var j=0 ; j < prevSelection[i].length; j++) { %>
+                    <th scope="row">
+                        <%= j+1 %>
+                    </th>
+                    <td>
+                        <%= prevSelection[i][j].candidateId%>
+                    </td>
+                    <td>
+                        <%= prevSelection[i][j].firstName%> <%= prevSelection[i][j].lastName%>
+                    </td>
+                    <td>
+                        <%= prevSelection[i][j].gender%>
+                    </td>
+                    <td>
+                        <%= prevSelection[i][j].contact%>
+                    </td>
+                    <td>  
+                        <% var idd = (i+1)*100000; %>
+                        <% idd = idd + j %>
+                        <% var idd2 = "ee"+idd; %> 
+                        <input  id=<%= idd2 %> type="checkbox" name="box" value=<%= j %> onclick="chkcontrol( <%=prevSelection[i][j].hasVoted %>, <%=i %>, <%=j %>, <%=prevSelection[i].length %>);" >
+                    </td>
+                </tr>
+            <% }%>
+        </tbody>
+    </table>
+    <button type="submit" name="submit" class="btn btn-primary form-control" value=<%=i%> > Remove Candidate</button>
+    </form>    
+</div>
+</div>
+
+<div class="column">
+    <% var id2 = i + 10000 %>  
+    <div id= <%= id2 %> style="position:absolute;left:600px; display:none;" >
+    <form action="/admin/candidateelection" method = "post" name = <%= i %> >
+      <table class="table table-hover table-bordered table-striped">
+          <h4>Extra Available Candidates</h4>
+          <small>Select a candidate to add him into this election.</small>
+          <thead>
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Candidate Id</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Gender</th>
+                  <th scope="col">Contact</th>
+                  <th scope="col">Select</th>
+              </tr>
+          </thead>
+          
+          <tbody>
+              <% for(var j=0 ; j < availableCandidates[i].length; j++) { %>
+                      <th scope="row">
+                          <%= j+1 %>
+                      </th>
+                      <td>
+                        <%= availableCandidates[i][j].candidateId%>
+                    </td>
+                      <td>
+                          <%= availableCandidates[i][j].firstname%> <%= availableCandidates[i][j].lastname%>
+                      </td>
+                      <td>
+                          <%= availableCandidates[i][j].gender%>
+                      </td>
+                      <td>
+                          <%= availableCandidates[i][j].contact%>
+                      </td>
+                      <td>  
+                        <input type="checkbox" name="box" value=<%= j %> >
+                      </td>
+                  </tr>
+                <% }%>
+            </tbody>
+      </table>
+      <button type="submit" name="submit" class="btn btn-primary form-control" value=<%=i%> > Add Candidate</button>
+    </form>    
+    <!-- </div> -->
+    </div>
+    </div>
+
+
+
+<% } %>
+</div>
